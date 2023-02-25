@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+
+<style>
+  body {background-color: #ababab;}
+    
+  .overlay {
+      position:absolute;
+      z-index:0;
+      top:0;
+      left:0;
+  }
+</style>
+
+<img id="panel" src="{{url_for('static', filename='metal_panel.jpg')}}" width="55" height="85" class="overlay">
+<div id="box"></div>
+  
+<script>
+    
+dials=[];
+    
+function tap_red(index,x,y){
+    console.log("r");
+    var count=0;
+    for (i = 0; i < dials.length; i++) {
+        if ((dials[i][1]==x+1 && dials[i][2]==y && dials[i][3]=="r") || (dials[i][1]==x && dials[i][2]==y-1 && dials[i][3]=="r") ||
+            (dials[i][1]==x && dials[i][2]==y+1 && dials[i][3]=="r") || (dials[i][1]==x-1 && dials[i][2]==y && dials[i][3]=="r")){
+            count=count+1;
+        }
+    }
+    if (count>1){
+        change(index,"b");
+    }
+}
+
+function tap_blue(index,x,y){
+    var check=true;
+    for (i = 0; i < dials.length; i++) {
+        if ((dials[i][1]<=x+1 && dials[i][1]>=x-1) && (dials[i][2]<=y+1 && dials[i][2]>=y-1) && dials[i][3]!="g" && i!=index){
+            check=false;
+            console.log(i);
+        }
+    }
+    if (check){
+        change(index,"g");
+    }
+    else{
+        for (i = 0; i < dials.length; i++) {
+            if ((dials[i][1]==x+1 && dials[i][2]==y && dials[i][3]=="b") || (dials[i][1]==x && dials[i][2]==y-1 && dials[i][3]=="b") ||
+                (dials[i][1]==x && dials[i][2]==y+1 && dials[i][3]=="b") || (dials[i][1]==x-1 && dials[i][2]==y && dials[i][3]=="b")){
+                change(i,"g");
+            }
+        }
+    }
+}
+
+function tap_green(index,x,y){
+    console.log("g");
+    for (i = 0; i < dials.length; i++) {
+        if ((dials[i][1]==x+1 && dials[i][2]==y && dials[i][3]=="r") || (dials[i][1]==x && dials[i][2]==y-1 && dials[i][3]=="r") ||
+            (dials[i][1]==x && dials[i][2]==y+1 && dials[i][3]=="r") || (dials[i][1]==x-1 && dials[i][2]==y && dials[i][3]=="r")){
+            change(i,"b");
+        }
+    }
+}
+    
+function makedial(x,y){
+    var current=dials.length;
+    dials.push([document.createElement('img'),x,y,'r']);
+    dials[current][0].setAttribute(
+        'src',
+        "{{url_for('static', filename='red.png')}}"
+    );
+    dials[current][0].setAttribute('alt', 'nature');
+    dials[current][0].setAttribute('height', 85);
+    dials[current][0].setAttribute('width', 55);
+    dials[current][0].classList.add("overlay");
+    dials[current][0].style.left=20+"px";
+    dials[current][0].style.top=20+"px";
+    dials[current][0].style.zIndex=1;
+    box.appendChild(dials[current][0]);
+    dials[current][0].onclick = function() {
+        tap_red(current,x,y);
+    };
+}
+    
+    
+function resize(){
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    
+    if (h>w){
+        panel.style.width=w+"px";
+        panel.style.height=w+"px";
+        panel.style.top=0.5*(h-w)+"px";
+        panel.style.left=0+"px"; 
+        
+        for (i = 0; i < dials.length; i++) {
+            dials[i][0].style.left=dials[i][1]*w/3+"px";
+            dials[i][0].style.top=0.5*(h-w)+dials[i][2]*w/3+"px";
+      
+            dials[i][0].setAttribute('height', w/3);
+            dials[i][0].setAttribute('width', w/3);
+        }
+    }
+    else{
+        panel.style.width=h+"px";
+        panel.style.height=h+"px";
+        panel.style.left=0.5*(w-h)+"px";
+        panel.style.top=0+"px";
+        
+        for (i = 0; i < dials.length; i++) {
+            dials[i][0].style.left=0.5*(w-h)+dials[i][1]*h/3+"px";
+            dials[i][0].style.top=dials[i][2]*h/3+"px";
+      
+            dials[i][0].setAttribute('height', h/3);
+            dials[i][0].setAttribute('width', h/3);
+        }
+    }
+}
+
+function change(index,colour){
+    dials[index][3]=colour;
+    if (colour=="r"){
+            dials[index][0].setAttribute(
+            'src',
+            "{{url_for('static', filename='red.png')}}"
+        );
+        dials[index][0].onclick = function() {
+            tap_red(index,dials[index][1],dials[index][2]);
+        };
+    }
+    else if (colour=="b"){
+            dials[index][0].setAttribute(
+            'src',
+            "{{url_for('static', filename='blue.png')}}"
+        );
+        dials[index][0].onclick = function() {
+            tap_blue(index,dials[index][1],dials[index][2]);
+        };
+    }
+    else if (colour=="g"){
+            dials[index][0].setAttribute(
+            'src',
+            "{{url_for('static', filename='green.png')}}"
+        );
+        dials[index][0].onclick = function() {
+            tap_green(index,dials[index][1],dials[index][2]);
+        };
+    }
+}
+
+window.onresize = function() {
+    resize();
+};
+
+makedial(0,0);
+makedial(0,1);
+makedial(0,2);
+makedial(1,0);
+makedial(1,1);
+makedial(1,2);
+makedial(2,0);
+makedial(2,1);
+makedial(2,2);
+resize();
+</script>
