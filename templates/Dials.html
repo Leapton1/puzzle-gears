@@ -69,7 +69,7 @@ function makedial(x,y){
     dials.push([document.createElement('img'),x,y,'r']);
     dials[current][0].setAttribute(
         'src',
-        "{{url_for('static', filename='red.png')}}"
+        "{{url_for('static', filename='red_dial.png')}}"
     );
     dials[current][0].setAttribute('alt', 'nature');
     dials[current][0].setAttribute('height', 85);
@@ -88,6 +88,7 @@ function makedial(x,y){
 function resize(){
     var w = window.innerWidth;
     var h = window.innerHeight;
+    console.log(w,h);
     
     if (h>w){
         panel.style.width=w+"px";
@@ -96,11 +97,11 @@ function resize(){
         panel.style.left=0+"px"; 
         
         for (i = 0; i < dials.length; i++) {
-            dials[i][0].style.left=dials[i][1]*w/3+"px";
-            dials[i][0].style.top=0.5*(h-w)+dials[i][2]*w/3+"px";
+            dials[i][0].style.left=dials[i][1]*w/3+w/24+"px";
+            dials[i][0].style.top=0.5*(h-w)+dials[i][2]*w/3+w/24+"px";
       
-            dials[i][0].setAttribute('height', w/3);
-            dials[i][0].setAttribute('width', w/3);
+            dials[i][0].setAttribute('height', w/4);
+            dials[i][0].setAttribute('width', w/4);
         }
     }
     else{
@@ -110,11 +111,11 @@ function resize(){
         panel.style.top=0+"px";
         
         for (i = 0; i < dials.length; i++) {
-            dials[i][0].style.left=0.5*(w-h)+dials[i][1]*h/3+"px";
-            dials[i][0].style.top=dials[i][2]*h/3+"px";
+            dials[i][0].style.left=0.5*(w-h)+dials[i][1]*h/3+h/24+"px";
+            dials[i][0].style.top=dials[i][2]*h/3+h/24+"px";
       
-            dials[i][0].setAttribute('height', h/3);
-            dials[i][0].setAttribute('width', h/3);
+            dials[i][0].setAttribute('height', h/4);
+            dials[i][0].setAttribute('width', h/4);
         }
     }
 }
@@ -124,7 +125,7 @@ function change(index,colour){
     if (colour=="r"){
             dials[index][0].setAttribute(
             'src',
-            "{{url_for('static', filename='red.png')}}"
+            "{{url_for('static', filename='red_dial.png')}}"
         );
         dials[index][0].onclick = function() {
             tap_red(index,dials[index][1],dials[index][2]);
@@ -133,7 +134,7 @@ function change(index,colour){
     else if (colour=="b"){
             dials[index][0].setAttribute(
             'src',
-            "{{url_for('static', filename='blue.png')}}"
+            "{{url_for('static', filename='blue_dial.png')}}"
         );
         dials[index][0].onclick = function() {
             tap_blue(index,dials[index][1],dials[index][2]);
@@ -142,7 +143,7 @@ function change(index,colour){
     else if (colour=="g"){
             dials[index][0].setAttribute(
             'src',
-            "{{url_for('static', filename='green.png')}}"
+            "{{url_for('static', filename='green_dial.png')}}"
         );
         dials[index][0].onclick = function() {
             tap_green(index,dials[index][1],dials[index][2]);
