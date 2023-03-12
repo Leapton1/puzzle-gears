@@ -1,6 +1,7 @@
 <!DOCTYPE html>
+<html>
 
-
+<head>
 <style>
   body {background-color: #ababab;}
     
@@ -10,10 +11,33 @@
       top:0;
       left:0;
   }
+  
+  .refresh_button {
+      position:absolute;
+      z-index:0;
+      top:0;
+      left:0;
+      height: 5%;
+      font-size: 3.5vh;
+  }
+  
+  
+  .hint_button {
+      position:absolute;
+      z-index:0;
+      top:95%;
+      left:0;
+      height: 5%;
+      font-size: 3.5vh;
+  }
 </style>
+</head>
 
+<body>
 <img id="panel" src="{{url_for('static', filename='metal_panel.jpg')}}" width="55" height="85" class="overlay">
 <div id="box"></div>
+<button id="refresh_button" onclick="refresh();" class="refresh_button">Refresh</button>
+<button id="hint_button" onclick="hint();" class="hint_button">Hint</button>
   
 <script>
     
@@ -30,6 +54,10 @@ function tap_red(index,x,y){
     }
     if (count>1){
         change(index,"b");
+    }
+    else{
+      audio = new Audio("{{url_for('static', filename='failure.mp3')}}");
+      audio.play();
     }
 }
 
@@ -149,6 +177,35 @@ function change(index,colour){
             tap_green(index,dials[index][1],dials[index][2]);
         };
     }
+  audio = new Audio("{{url_for('static', filename='clunk.mp3')}}");
+  audio.play();
+  check();
+}
+
+function refresh(){
+  var i;
+  for (i = 0; i < dials.length; i++) {
+    change(i,"r");
+  }
+}
+
+function hint(){
+  alert("There is one rule for red dials, one rule for green dials, and 2 for blue dials");
+}
+
+function check(){
+  var check=true;
+  var i;
+  for (i = 0; i < dials.length; i++) {
+    if (dials[i][3]!="g"){
+      check=false;
+    }
+  }
+  if (check==true){
+    audio = new Audio("{{url_for('static', filename='complete.mp3')}}");
+    audio.play();
+    alert("You have completed the puzzle, but do you know the rules of each colour?");
+  }
 }
 
 window.onresize = function() {
@@ -166,3 +223,5 @@ makedial(2,1);
 makedial(2,2);
 resize();
 </script>
+</body>
+</html>
